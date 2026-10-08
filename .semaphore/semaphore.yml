@@ -1,0 +1,14 @@
+version: v1.0
+name: ci-probe
+agent:
+  machine:
+    type: r1-standard-8
+    os_image: ubuntu2404
+blocks:
+  - name: probe
+    task:
+      jobs:
+        - name: r1-standard-8
+          commands:
+            - checkout
+            - PROBE_COMPILE=1 bash probe.sh
