@@ -47,6 +47,16 @@ free -g | head -2
 df -h / "$HOME" 2>/dev/null | sort -u
 for f in cpuinfo_max_freq scaling_cur_freq; do v=$(cat /sys/devices/system/cpu/cpu0/cpufreq/$f 2>/dev/null) && echo "$f: $v kHz"; done
 
+sec "network: 下载速度/连接延迟（限时 20 秒）"
+dl() { # 名称 URL
+  curl -s -o /dev/null -m 20 -L -w "$1: %{speed_download} B/s  connect %{time_connect}s  total %{time_total}s  http %{http_code}\n" "$2" || echo "$1: FAILED"
+}
+dl "rust-lang CDN (大文件)" https://static.rust-lang.org/dist/rust-1.98.1-aarch64-unknown-linux-gnu.tar.xz
+dl "crates.io (ripgrep crate)" https://static.crates.io/crates/ripgrep/ripgrep-14.1.1.crate
+dl "GitHub release asset" https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-aarch64-unknown-linux-gnu.tar.gz
+dl "B2 us-west-004 (仅连接)" https://s3.us-west-004.backblazeb2.com/
+dl "Singapore prod 方向 (OCI 对象存储端点)" https://objectstorage.ap-singapore-1.oraclecloud.com/
+
 sec "benchmark: openssl sha256 (单核 / 全核)"
 steal0=$(awk '/^cpu /{print $9}' /proc/stat)
 openssl version
