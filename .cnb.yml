@@ -1,5 +1,5 @@
-# 推送任意分支触发；只用 1 个 job，8 核，约几核时内结束。
-$:
+# 推送 main 触发；只用 1 个 job，8 核。
+main:
   push:
     - runner:
         tags: cnb:arch:arm64:v8
